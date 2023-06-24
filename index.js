@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 require("dotenv").config();
+const util = require("util");
 
 const db = mysql.createConnection(
   {
@@ -11,29 +12,37 @@ const db = mysql.createConnection(
     password: process.env.DB_PW,
     database: process.env.DB_DATABASE,
   },
-  console.log(`Connected to the employee_db database.`)
+  console.log(`Connected to the employees_db database.`)
 );
-inquirer.prompt([
-  {
-    type: "list",
-    message: "Select one",
-    name: "main menue",
-    choices: [
-      "view all departments",
-      "view all roles",
-      "view all employees",
-      "add a department",
-      "add a role",
-      "add an employee",
-      "update an employee role",
-    ],
-  },
-]);
-//use db.querey to select department console.table(result)
-db.query("SELECT * FROM department", function (err, results) {
-  console.table(results);
-});
 
+const query = util.promisify(db.query).bind(db);
+
+async function init() {
+  const answers = await inquirer.prompt([
+    {
+      type: "list",
+      message: "Select one",
+      name: "main menue",
+      choices: [
+        "view all departments",
+        "view all roles",
+        "view all employees",
+        "add a department",
+        "add a role",
+        "add an employee",
+        "update an employee role",
+      ],
+    },
+  ]);
+  await alldepartments();
+}
+
+async function alldepartments() {
+  //use db.querey to select department console.table(result)
+  const results = await query("SELECT * FROM department");
+  console.table(results);
+}
+init();
 //   {
 //     type: "input",
 //     message: "What is your email address?",
