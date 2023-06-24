@@ -22,7 +22,7 @@ async function init() {
     {
       type: "list",
       message: "Select one",
-      name: "main menue",
+      name: "main menu",
       choices: [
         "view all departments",
         "view all roles",
