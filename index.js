@@ -6,9 +6,7 @@ const util = require("util");
 const db = mysql.createConnection(
   {
     host: "localhost",
-    // MySQL username,
     user: process.env.DB_USER,
-    // MySQL password
     password: process.env.DB_PW,
     database: process.env.DB_DATABASE,
   },
@@ -22,7 +20,7 @@ async function init() {
     {
       type: "list",
       message: "Select one",
-      name: "main menu",
+      name: "main menue",
       choices: [
         "view all departments",
         "view all roles",
@@ -43,6 +41,7 @@ async function alldepartments() {
   console.table(results);
 }
 init();
+
 //   {
 //     type: "input",
 //     message: "What is your email address?",
