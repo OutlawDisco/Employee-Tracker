@@ -8,7 +8,7 @@ const db = mysql.createConnection(
     host: "localhost",
     user: process.env.DB_USER,
     password: process.env.DB_PW,
-    database: process.env.DB_DATABASE,
+    database: process.env.DB_NAME,
   },
   console.log(`Connected to the employees_db database.`)
 );
@@ -20,7 +20,7 @@ async function init() {
     {
       type: "list",
       message: "Select one",
-      name: "main menue",
+      name: "mainMenue",
       choices: [
         "view all departments",
         "view all roles",
@@ -29,65 +29,111 @@ async function init() {
         "add a role",
         "add an employee",
         "update an employee role",
+        "delete a department",
+        "delete a role",
+        "delete an employee",
       ],
     },
   ]);
-  await alldepartments();
+  if (answers.mainMenue === "view all departments") {
+    allDepartments();
+  } else if (answers.mainMenue === "view all roles") {
+    allRoles();
+  } else if (answers.mainMenue === "view all employees") {
+    allEmployees();
+  } else if (answers.mainMenue === "add a department") {
+    addDepartment();
+  } else if (answers.mainMenue === "add a role") {
+    addRoll();
+  } else if (answers.mainMenue === "add an employee") {
+    addEmployee();
+  } else if (answers.mainMenue === "update an employee role") {
+    updateEmployeeRole();
+  } else if (answers.mainMenue === "delete a department") {
+    deleteDepartment();
+  } else if (answers.mainMenue === "delete a role") {
+    deleteDepartment();
+  } else if (answers.mainMenue === "delete an employee") {
+    deleteDepartment();
+  }
 }
 
-async function alldepartments() {
-  //use db.querey to select department console.table(result)
+async function allDepartments() {
   const results = await query("SELECT * FROM department");
   console.table(results);
+  init();
 }
-init();
+async function allRoles() {
+  const results = await query("SELECT * FROM role");
+  console.table(results);
+  init();
+}
+async function allEmployees() {
+  const results = await query("SELECT * FROM employee");
+  console.table(results);
+  init();
+}
 
-//   {
-//     type: "input",
-//     message: "What is your email address?",
-//     name: "email",
-//   },
-//   {
-//     type: "input",
-//     message: "project name?",
-//     name: "projectName",
-//   },
-//   {
-//     type: "input",
-//     message: "Please write a short description of your project",
-//     name: "description",
-//   },
-//   {
-//     type: "list",
-//     message: "What kind of license should your project have?",
-//     name: "license",
-//     choices: ["MIT", "Apache 2.0", "other"],
-//   },
-//   {
-//     type: "input",
-//     message: "What command should be run to install dependencies?",
-//     default: "npm i",
-//     name: "installation",
-//   },
-//   {
-//     type: "input",
-//     message: "What command should be run to run tests?",
-//     default: "npm test",
-//     name: "tests",
-//   },
-//   {
-//     type: "input",
-//     message: "What does the user need to know about using the repo?",
-//     default: "nothing",
-//     name: "usage",
-//   },
-//   {
-//     type: "input",
-//     message:
-//       "What does the user need to know about contributing to the repo?",
-//     default: "please dont",
-//     name: "contribute",
-//   },
-// ])
-// .then((answers) => {
-//   const mdPageContent = generateMD(answers);
+async function addDepartment() {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      message: "add department name",
+      name: "name",
+    },
+  ]);
+  const results = await query("INSERT INTO department SET ?", answers);
+  console.table(results);
+  init();
+}
+
+async function updateEmployeeRole() {
+  const employees = await query("SELECT * FROM employee");
+  const role = await query("SELECT * FROM role");
+  const employeeArray = employees.map((emp) => ({
+    name: `${emp.first_name} ${emp.last_name}`,
+    value: emp.id,
+  }));
+  const roleArray = role.map((empRole) => ({
+    name: empRole.title,
+    value: empRole.id,
+  }));
+  const answers = await inquirer.prompt([
+    {
+      type: "list",
+      message: "choose a department to delete",
+      name: "id",
+      choices: employeeArray,
+    },
+  ]);
+  const updateEmp = await query("UPDATE employees SET?");
+}
+
+async function deleteDepartment() {
+  const results = await query("SELECT * FROM department");
+  const departmentArray = results.map((dept) => ({
+    name: dept.name,
+    value: dept.id,
+  }));
+  console.log(departmentArray);
+  const answers = await inquirer.prompt([
+    {
+      type: "list",
+      message: "choose a department to delete",
+      name: "id",
+      choices: departmentArray,
+    },
+  ]);
+  const deleteRES = await query(
+    "DELETE FROM department WHERE id = ?",
+    answers.id
+  );
+  console.table(deleteRES);
+  init();
+}
+
+async function addRole() {}
+
+async function addEmployee() {}
+
+init();
