@@ -44,7 +44,7 @@ async function init() {
   } else if (answers.mainMenue === "add a department") {
     addDepartment();
   } else if (answers.mainMenue === "add a role") {
-    addRoll();
+    addRole();
   } else if (answers.mainMenue === "add an employee") {
     addEmployee();
   } else if (answers.mainMenue === "update an employee role") {
@@ -52,12 +52,12 @@ async function init() {
   } else if (answers.mainMenue === "delete a department") {
     deleteDepartment();
   } else if (answers.mainMenue === "delete a role") {
-    deleteDepartment();
+    deleteRole();
   } else if (answers.mainMenue === "delete an employee") {
-    deleteDepartment();
+    deleteEmployee();
   }
 }
-
+//funtions to view departments, roles, and employees
 async function allDepartments() {
   const results = await query("SELECT * FROM department");
   console.table(results);
@@ -73,7 +73,7 @@ async function allEmployees() {
   console.table(results);
   init();
 }
-
+//functions to add departments, roles and employees
 async function addDepartment() {
   const answers = await inquirer.prompt([
     {
@@ -87,6 +87,39 @@ async function addDepartment() {
   init();
 }
 
+async function addRole() {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      message: "add role title",
+      name: "title",
+    },
+  ]);
+  const results = await query("INSERT INTO role SET ?", answers);
+  console.table(results);
+  init();
+}
+async function addEmployee() {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      message: "first name of new employee?",
+      name: "first_name",
+    },
+    {
+      type: "input",
+      message: "last name of new employee?",
+      name: "last_name",
+    },
+  ]);
+  const results = await query(
+    "INSERT INTO employee(first_name, last_name) SET ?",
+    answers
+  );
+  console.table(results);
+  init();
+}
+
 async function updateEmployeeRole() {
   const employees = await query("SELECT * FROM employee");
   const role = await query("SELECT * FROM role");
@@ -95,7 +128,7 @@ async function updateEmployeeRole() {
     value: emp.id,
   }));
   const roleArray = role.map((empRole) => ({
-    name: empRole.title,
+    name: `${empRole.title} ${empRole.salary}`,
     value: empRole.id,
   }));
   const answers = await inquirer.prompt([
@@ -106,7 +139,7 @@ async function updateEmployeeRole() {
       choices: employeeArray,
     },
   ]);
-  const updateEmp = await query("UPDATE employees SET?");
+  const updateEmp = await query("UPDATE employees SET?", answers);
 }
 
 async function deleteDepartment() {
