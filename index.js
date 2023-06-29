@@ -51,10 +51,6 @@ async function init() {
     updateEmployeeRole();
   } else if (answers.mainMenue === "delete a department") {
     deleteDepartment();
-  } else if (answers.mainMenue === "delete a role") {
-    deleteRole();
-  } else if (answers.mainMenue === "delete an employee") {
-    deleteEmployee();
   }
 }
 //funtions to view departments, roles, and employees
@@ -88,11 +84,22 @@ async function addDepartment() {
 }
 
 async function addRole() {
+  console.log("made it to function");
   const answers = await inquirer.prompt([
     {
       type: "input",
       message: "add role title",
       name: "title",
+    },
+    {
+      type: "input",
+      message: "add role salary",
+      name: "salary",
+    },
+    {
+      type: "input",
+      message: "Enter the department id #",
+      name: "department_id",
     },
   ]);
   const results = await query("INSERT INTO role SET ?", answers);
@@ -111,11 +118,13 @@ async function addEmployee() {
       message: "last name of new employee?",
       name: "last_name",
     },
+    {
+      type: "input",
+      message: "enter role id #?",
+      name: "role_id",
+    },
   ]);
-  const results = await query(
-    "INSERT INTO employee(first_name, last_name) SET ?",
-    answers
-  );
+  const results = await query("INSERT INTO employee SET ?", answers);
   console.table(results);
   init();
 }
@@ -134,12 +143,21 @@ async function updateEmployeeRole() {
   const answers = await inquirer.prompt([
     {
       type: "list",
-      message: "choose a department to delete",
+      message: "choose an employee to update",
       name: "id",
       choices: employeeArray,
     },
+    {
+      type: "list",
+      message: "chose a role for employee",
+      name: "role_id",
+      choices: roleArray,
+    },
   ]);
-  const updateEmp = await query("UPDATE employees SET?", answers);
+  const updateEmp = await query(
+    "UPDATE employees SET role_id = ? WHERE id = ?",
+    [answers.role_id, answers.id]
+  );
 }
 
 async function deleteDepartment() {
@@ -164,9 +182,5 @@ async function deleteDepartment() {
   console.table(deleteRES);
   init();
 }
-
-async function addRole() {}
-
-async function addEmployee() {}
 
 init();
