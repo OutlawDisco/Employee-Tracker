@@ -30,8 +30,6 @@ async function init() {
         "add an employee",
         "update an employee role",
         "delete a department",
-        "delete a role",
-        "delete an employee",
       ],
     },
   ]);
