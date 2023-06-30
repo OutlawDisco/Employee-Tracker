@@ -158,6 +158,7 @@ async function updateEmployeeRole() {
     "UPDATE employee SET role_id = ? WHERE id = ?",
     [answers.role_id, answers.id]
   );
+  init();
 }
 
 async function deleteDepartment() {
