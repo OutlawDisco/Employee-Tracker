@@ -13,7 +13,7 @@ VALUES ("manager", 60000, 3),
 ("full_time_receptionist", 35000, 1),
 ("part_time_receptionist", 16640, 1),
 ('bather', 40000, 2),
-('associate', 3500, 3 ),
+('associate', 35000, 3 ),
 ('associate', 30000, 4);
 
 INSERT employee (first_name, last_name, role_id)
