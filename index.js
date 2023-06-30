@@ -155,7 +155,7 @@ async function updateEmployeeRole() {
     },
   ]);
   const updateEmp = await query(
-    "UPDATE employees SET role_id = ? WHERE id = ?",
+    "UPDATE employee SET role_id = ? WHERE id = ?",
     [answers.role_id, answers.id]
   );
 }
