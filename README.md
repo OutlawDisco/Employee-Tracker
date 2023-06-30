@@ -16,6 +16,11 @@ npm i
 ## Usage
 
 Command-line application
+link to video walk-through:
+https://drive.google.com/file/d/1tMDFagonsY1JcX4aAm9FccJxP2f2YE0N/view
+
+link to github repo:
+https://github.com/OutlawDisco/Employee-Tracker
 
 ## Credits
 
